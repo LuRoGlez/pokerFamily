@@ -1,50 +1,51 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserProvider'
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
     const {loginUser} = useContext(UserContext);
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("procesando form..." + email + password);
+    const { register, handleSubmit, formState: {errors} } = useForm();
+
+    const onSubmit = async (data) => {
         try {
-            await loginUser(email, password);
+            await loginUser(data.email, data.password);
             navigate("/");
         } catch (error) {
             console.log(error.code);
         }
-    };
-
+    }
 
   return (
       <>
       <h1 className='m-5'>Inicia Sesión</h1>
-      <form onSubmit={handleSubmit}
+      <form onSubmit={handleSubmit(onSubmit)}
       className="m-5">
        <div className="col-sm-3 ">
-        <div className="form-group">
+       <div className="form-group">
         <label  className="form-label mt-2">Email:</label>
             <input type="email" 
             className="form-control"
             placeholder="Email" 
-            value = {email}
-            onChange = { e => setEmail(e.target.value)}
+            {...register('email', {required: 'Campo obligatorio'})}
             />
+            {errors.email && <p style={{color: "red"}}>{errors.email.message}</p>}
         </div>
         <div className="form-group">
         <label  className="form-label mt-2">Contraseña:</label>
-        <input type="password" 
-        className="form-control"
-        placeholder="Contraseña" 
-        value = {password}
-        onChange = { e => setPassword(e.target.value)}
+            <input type="password" 
+            className="form-control"
+            placeholder="Contraseña" 
+            {...register('password', {required: 'Campo obligatorio',
+                                      minLength : {
+                                            value: 6,
+                                            message: 'La contraseña debe tener al menos 6 caracteres'
+                                      }})}
         />
+        {errors.password && <p style={{color: "red"}}>{errors.password.message}</p>}
         </div>
         <div className="d-grid gap-2">
         <button type="submit"
