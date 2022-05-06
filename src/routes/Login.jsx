@@ -8,14 +8,24 @@ const Login = () => {
     const {loginUser} = useContext(UserContext);
     const navigate = useNavigate();
 
-    const { register, handleSubmit, formState: {errors} } = useForm();
+    const { register, handleSubmit, formState: {errors}, setError } = useForm();
 
     const onSubmit = async (data) => {
         try {
             await loginUser(data.email, data.password);
             navigate("/");
         } catch (error) {
-            console.log(error.code);
+            switch(error.code){
+                case "auth/user-not-found" :
+                    setError("password", {
+                        message: "El email o la contraseña son incorrectos"
+                    })
+                    break;
+                    default:
+                        setError("email", {
+                            message: "Ocurrió un error, intentelo de neuvo"
+                        })
+            }
         }
     }
 
