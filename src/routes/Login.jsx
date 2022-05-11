@@ -23,18 +23,18 @@ const Login = () => {
                     break;
                     default:
                         setError("email", {
-                            message: "Ocurrió un error, intentelo de neuvo"
+                            message: "Ocurrió un error, intentelo de nuevo"
                         })
             }
         }
     }
 
   return (
-      <>
-      <h1 className='m-5'>Inicia Sesión</h1>
-      <form onSubmit={handleSubmit(onSubmit)}
-      className="m-5">
-       <div className="col-sm-3 ">
+      <div className="portada centerFragment">
+      
+      <form onSubmit={handleSubmit(onSubmit)}  className="createGame">
+      <h1 className='my-3'>Inicia Sesión</h1>
+       <div>
        <div className="form-group">
         <label  className="form-label mt-2">Email:</label>
             <input type="email" 
@@ -64,7 +64,7 @@ const Login = () => {
         </div>
         </div>
     </form>
-    </>
+    </div>
     
   )
 }

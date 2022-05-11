@@ -35,6 +35,9 @@ const Dropd = () => {
                     <Link className="dropdown-item" to="/gamesPlayed">Partidas Jugadas</Link>
                 </DropdownItem>
                 <DropdownItem>
+                    <Link className="dropdown-item" to="/profile">Perfil</Link>
+                </DropdownItem>
+                <DropdownItem>
                 <Link
                         to='/login'
                         className='dropdown-item'

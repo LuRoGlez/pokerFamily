@@ -25,19 +25,19 @@ const Register = () => {
                     break;
                     default:
                         setError("email", {
-                            message: "Ocurrió un error, intentelo de neuvo"
+                            message: "Ocurrió un error, intentelo de nuevo"
                         })
             }
         }
     }
 
   return (
-    <> 
-    <h1 className="m-5">Crea Tu Cuenta</h1>
+    <div className="portada centerFragment"> 
     <form onSubmit={handleSubmit(onSubmit)}
-    className="m-5"
+    className="createGame"
     >
-    <div className="col-sm-3 ">
+    <h1 className="my-3">Crea Tu Cuenta</h1>
+    <div>
         <div className="form-group">
             <label  className="form-label mt-2">Nombre de usuario:</label>
                 <input type="text" 
@@ -88,7 +88,7 @@ const Register = () => {
         </div>
         </div>
     </form>
-    </>
+    </div>
   )
 }
 
