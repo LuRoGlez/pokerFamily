@@ -49,3 +49,138 @@
     background-position: center;
     background-size: cover;
 }
+
+.containerHome{
+    display: flex;
+    flex-direction: row;
+
+}
+
+.containerGames{
+    width: 65%;
+    padding-top: 1rem;
+
+}
+
+.containerDetail{
+    width: 35%;
+    padding-top: 1rem;
+}
+
+.containerTable{
+    margin-left: 5%;
+    margin-right: 5%;
+    max-height:50em;
+    overflow-y:scroll;
+    border-top-left-radius: 1em;
+     border-bottom-left-radius: 1rem;
+}
+
+th {
+    background-color: #E0E0E0;
+    color:black;
+    font-weight: 500;
+}
+
+tbody:nth-child(even) {
+    background-color: #313131;
+    cursor: pointer
+}
+
+tbody:nth-child(odd) {
+    background-color: #545454 ;
+    cursor: pointer
+}
+
+tr {
+    color:white;
+    font-weight: 500;
+}
+
+table{
+        font-size: 14px;
+        border-collapse: collapse;
+        border-top-left-radius: 1em;
+        border-bottom-left-radius: 1rem;
+        overflow: hidden;
+      
+  }
+
+.nombreTable{
+    width: 30%;
+}
+
+.horaTable{
+    width: 5%
+}
+
+.fechaTable{
+    width: 5%
+}
+
+.ciudadTable{
+    width: 25%
+}
+
+.buyinTable{
+    width: 8%;
+}
+
+.jugadoresTable{
+    width: 5%;
+}
+
+.caracteristicasTable{
+    width: 20%;
+}
+
+.tableCenter{
+    text-align: center;
+}
+
+.selected{
+    background-color: #720D0D;
+}
+
+h2{
+    text-align: center;
+}
+
+h4{
+    text-align: center;
+    text-transform: capitalize;
+    color: #EFCD49;
+}
+
+.containerDetalles{
+    background-color: black;
+    height: 85%;
+    border-radius: 0.5rem;
+    width: 60%;
+    padding: 1rem;
+    color: white;
+    line-break: 0;
+}
+
+.registerDetail{
+    background-color: #E3E3E3;
+    height: 80%;
+    width: 95%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+
+span{
+    font-weight: bold;
+}
+
+.center{
+    margin-left: 40%;
+    margin-right: 50%;
+}
+
+.playerList li:nth-child(even) {
+    background-color: green;
+    cursor: pointer
+}

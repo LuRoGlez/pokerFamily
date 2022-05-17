@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
-import { auth } from "../firebase/firebaseConfig";
+import db, { auth } from "../firebase/firebaseConfig";
 
 export const UserContext = createContext();
 
@@ -23,9 +24,21 @@ useEffect(() => {
     return () => unsuscribe
 }, [])
 
+const addPlayer = async (userName) => {
+    try {
+        await addDoc(collection(db, "players"), {
+            userName,
+            uid: auth.currentUser.uid
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 const registerUser = async (email, password, userName) => {
     await createUserWithEmailAndPassword(auth, email, password);
-    updateProfile(auth.currentUser, {displayName: userName});    
+    updateProfile(auth.currentUser, {displayName: userName});
+    await addPlayer(userName)  
 };
 
 const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);

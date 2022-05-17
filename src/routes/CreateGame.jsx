@@ -2,8 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import db, {auth} from "../firebase/firebaseConfig"
-import { collection,  addDoc } from "firebase/firestore"
+import { useFirestore } from "../hooks/useFirestore";
 
 const CreateGame = () => {
   const navigate = useNavigate();
@@ -13,114 +12,7 @@ const CreateGame = () => {
   const watchLate = watch("lateRegister")
   const watchAddon = watch("addon")
 
-  const addGame = async(addon, addonChips, addonPrice, addonLevel, address, buyin, city, lateLevels, lateRegister, levels, maxPlayers, name, playersXtable, rebuy, stackInicial, start) => {
-    try {
-        if(addon && rebuy && lateRegister){
-        await addDoc(collection(db, "games"), {
-            addon,
-            addonChips,
-            addonPrice,
-            addonLevel,
-            address,
-            buyin,
-            city,
-            lateLevels,
-            lateRegister,
-            levels,
-            maxPlayers,
-            name,
-            playersXtable,
-            rebuy,
-            stackInicial,
-            start,
-            uid: auth.currentUser.uid
-        });
-        } else if(addon && rebuy) {
-            await addDoc(collection(db, "games"), {
-            addon,
-            addonChips,
-            addonPrice,
-            addonLevel,
-            address,
-            buyin,
-            city,
-            levels,
-            maxPlayers,
-            name,
-            playersXtable,
-            rebuy,
-            stackInicial,
-            start,
-            uid: auth.currentUser.uid
-        });
-        } else if (addon){
-            await addDoc(collection(db, "games"), {
-                addon,
-                addonChips,
-                addonPrice,
-                addonLevel,
-                address,
-                buyin,
-                city,
-                levels,
-                maxPlayers,
-                name,
-                playersXtable,
-                stackInicial,
-                start,
-                uid: auth.currentUser.uid
-            });
-        } else if(rebuy && lateRegister){
-            await addDoc(collection(db, "games"), {
-                address,
-                buyin,
-                city,
-                lateLevels,
-                lateRegister,
-                levels,
-                maxPlayers,
-                name,
-                playersXtable,
-                rebuy,
-                stackInicial,
-                start,
-                uid: auth.currentUser.uid
-            });
-        } else if(rebuy){
-            await addDoc(collection(db, "games"), {
-                address,
-                buyin,
-                city,
-                levels,
-                maxPlayers,
-                name,
-                playersXtable,
-                rebuy,
-                stackInicial,
-                start,
-                uid: auth.currentUser.uid
-            });
-        } else {
-            await addDoc(collection(db, "games"), {
-                address,
-                buyin,
-                city,
-                lateLevels,
-                lateRegister,
-                levels,
-                maxPlayers,
-                name,
-                playersXtable,
-                stackInicial,
-                start,
-                uid: auth.currentUser.uid
-            });
-        }
-        
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+ const {addGame} = useFirestore();
 
 
   const onSubmit = async(data) => {
@@ -297,7 +189,7 @@ const CreateGame = () => {
             <input
               type="number"
               className="form-control short"
-              placeholder="Ej: 25"
+              placeholder="Ej: 6"
               {...register("lateLevels", { required: "Campo obligatorio" })}
             />
             {errors.lateLevels && (
