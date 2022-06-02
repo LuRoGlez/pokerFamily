@@ -1,13 +1,21 @@
 import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom'
 import { UserContext } from '../context/UserProvider';
+import { useForm } from "react-hook-form";
 import Dropd from './Dropdown';
 import logo from '../resources/pokerFamilylogo.PNG'
+import { SearchContext } from '../context/SearchProvider'
 
 const Header = () => {
     const { user } = useContext(UserContext)
+    const {searchCity} = useContext(SearchContext)
 
+    const { register, handleSubmit } = useForm();
 
+    const onSubmit = (data) => {
+        console.log(data.city)
+        searchCity(data.city)
+    }
 
     return (
     <main>
@@ -17,8 +25,14 @@ const Header = () => {
                 <img src={logo} alt="logo" width={200} />
             </Link>
             { user ? <>
-            <form className="d-flex">
-                <input className="form-control me-sm-2" type="text" placeholder="Donde quieres jugar?"/>
+            <form className="d-flex"
+            onSubmit={handleSubmit(onSubmit)}
+            >
+                <input className="form-control me-sm-2" 
+                type="text" 
+                placeholder="Donde quieres jugar?"
+                {...register('city')}
+                />
                 <button className="btn btn-primary my-2 my-sm-0" type="submit">Buscar</button>
             </form>
             <ul className='navbar-nav mr-auto'>

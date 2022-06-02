@@ -70,7 +70,7 @@
 .containerTable{
     margin-left: 5%;
     margin-right: 5%;
-    max-height:50em;
+    max-height:80%;
     overflow-y:scroll;
     border-top-left-radius: 1em;
      border-bottom-left-radius: 1rem;
@@ -82,18 +82,20 @@ th {
     font-weight: 500;
 }
 
-tbody:nth-child(even) {
+.itemsGame:nth-child(even) {
     background-color: #313131;
-    cursor: pointer
+    cursor: pointer;
+    color: white
 }
 
-tbody:nth-child(odd) {
+.itemsGame:nth-child(odd) {
     background-color: #545454 ;
-    cursor: pointer
+    cursor: pointer;
+    color: white
 }
 
 tr {
-    color:white;
+    
     font-weight: 500;
 }
 
@@ -111,11 +113,11 @@ table{
 }
 
 .horaTable{
-    width: 5%
+    width: 6%;
 }
 
 .fechaTable{
-    width: 5%
+    width:11%
 }
 
 .ciudadTable{
@@ -131,7 +133,7 @@ table{
 }
 
 .caracteristicasTable{
-    width: 20%;
+    width: 15%;
 }
 
 .tableCenter{
@@ -154,15 +156,18 @@ h4{
 
 .containerDetalles{
     background-color: black;
-    height: 85%;
     border-radius: 0.5rem;
-    width: 60%;
+    height: 100%;
+    width: 70%;
     padding: 1rem;
     color: white;
     line-break: 0;
+    margin-right: 2%;
 }
 
 .registerDetail{
+    display: flex;
+    flex-direction: column;
     background-color: #E3E3E3;
     height: 80%;
     width: 95%;
@@ -183,4 +188,51 @@ span{
 .playerList li:nth-child(even) {
     background-color: green;
     cursor: pointer
+}
+
+.separador{
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+}
+
+.jugadores{
+    height: 100%;
+    width: 28%;
+    background-color: white;
+    overflow-y:scroll;
+    border-radius: 0.5rem;
+}
+
+tbody:nth-child(odd) {
+    background-color: #eeeded ;
+    cursor: pointer;
+    color: black
+}
+
+tbody:nth-child(even) {
+    background-color: #fffcfc ;
+    cursor: pointer;
+    color: black;
+}
+
+.playersGame{
+    border-radius: 0;
+    text-align: end;
+    width: 100%;
+    
+}
+
+.playersTableTitle{
+    text-align: center;
+    background-color: #313131;
+    color: white;
+}
+
+.botonRegister{
+    height: 10%;
+    display: flex;
+    margin-top: 1%;
+    align-items: center;
+    justify-content: center;
 }
