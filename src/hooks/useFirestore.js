@@ -5,9 +5,10 @@ import db, {auth} from "../firebase/firebaseConfig"
 export const useFirestore = () => {
 
     const [data, setData] = useState([])
-    const [dataCurrent, setDataCurrent] =useState([])
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
+    const [playersGame, setPlayersGame] = useState([])
+    const [allPlayers, setAllPlayers] = useState([])
 
     //metodo ejemplo leer colección ---- crear states para cada colección
         //llevar el useEffect a cada componente y quitarlo de aqui para que no se ejecute frecuentemente
@@ -29,6 +30,31 @@ export const useFirestore = () => {
         }
     }
 
+    const getAllPlayers = async() => {
+        try {
+            const querySnapshot = await getDocs(collection(db, "players"))
+            const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
+            setAllPlayers(dataDB)
+        } catch (error) {
+            console.log(error)
+            setError(error.message)
+        }
+    }
+
+    const getPlayersGame = async(gameId) => {
+        try {
+            const dataRef = collection(db, "playGame")
+            const q = query(dataRef, where("gameId", "==", gameId))
+            const querySnapshot = await getDocs(q)
+            const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
+        setPlayersGame(dataDB)
+        } catch (error) {
+            console.log(error)
+            setError(error.message)
+        }
+        
+    }
+
     const getDataMyGame = async() => {
         try {
             setLoading(true)
@@ -47,21 +73,16 @@ export const useFirestore = () => {
         }
     }
 
-    const getCurrentGame = async(gameId) => {
+    const addPlayGame = async(gameId) => {
         try {
-            setLoading(true)
-            const dataRef = collection(db, "games")
-            const q = query(dataRef, where("id", "==", gameId))
-            const querySnapshot = await getDocs(q)
-            const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
-            setDataCurrent(dataDB)
-        } catch (error) {
+            await addDoc(collection(db, "playGame"), {
+                gameId,
+                uid: auth.currentUser.uid,
+                displayName: auth.currentUser.displayName
+            }
+            )} catch (error) {
             console.log(error)
             setError(error.message)
-            
-        } finally {
-            setLoading(false)
-
         }
     }
     
@@ -187,7 +208,15 @@ export const useFirestore = () => {
         }
     }
 
+    const searchCity = city => {
+        getDataGame()
+        console.log(data)
+        const dataCity = data.filter(item => item.city === city)
+        setData(dataCity)
+        console.log(data)
+    }
+
     return {
-        data, error, loading, getDataGame, addGame, getDataMyGame, getCurrentGame, dataCurrent
+        data, error, loading, setData, getDataGame, addGame, getDataMyGame, addPlayGame, playersGame, getPlayersGame, getAllPlayers, allPlayers, searchCity
     }
 }
