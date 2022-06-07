@@ -4,15 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import UserProvider from './context/UserProvider';
-import SearchProvider from './context/SearchProvider';
+import UseFirestore from './context/UseFirestore';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <SearchProvider>
+      <UseFirestore>
     <App />
-    </SearchProvider>
+    </UseFirestore>
     </UserProvider>
   </React.StrictMode>
 );

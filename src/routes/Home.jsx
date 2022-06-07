@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import CurrentGame from '../components/CurrentGame'
-import { useFirestore } from "../hooks/useFirestore";
+import { FirestoreContext } from "../context/UseFirestore";
 import { useEffect, useState } from "react";
 
 import rebuyImg from '../resources/rebuy.png'
 import addonImg from '../resources/addon.png'
 import lateImg from '../resources/late.png'
-import { getDate, getDay, setDate } from 'date-fns';
 
 const Home = () => {
 
-  const {data, error, loading, getDataGame, getPlayersGame, playersGame, getAllPlayers, allPlayers} =  useFirestore()
+  const {data, error, loading, getDataGame, getPlayersGame, playersGame, getAllPlayers, allPlayers, filtered, searched, getDataMyGame} =  useContext(FirestoreContext)
   const [current, setCurrent] = useState()
 
     useEffect(() => {
         getDataGame()
+        getDataMyGame()
         console.log(data)
         getAllPlayers()
     }, [])
@@ -37,6 +37,10 @@ const Home = () => {
     }
    
     
+   let today = Math.floor(new Date().getTime())/1000
+
+   
+
     const toDate = second => {
       let date = new Date(second*1000)
       var day = date.getDate();
@@ -78,12 +82,37 @@ const Home = () => {
 
                 </tr>
                 </thead>
-            {
+                {filtered && searched.length > 0   ?      
+                filtered.map(item => (
+            
+                  <tbody className='itemsGame'
+                  onClick={() => getDetailGame(item.id)}
+                  key = {item.id}>
+                    { item.start.seconds > today &&
+                  <tr className={current && item.id === current[0].id ? 'selected' : ""}>
+                    
+                       <td>{toDate(item.start.seconds)}</td>
+                       <td>{toTime(item.start.seconds)}</td>
+                       <td>{item.name}</td>
+                       <td>{item.city}</td>
+                       <td>{item.rebuy && <img src={rebuyImg} alt="Rebuy" width={17}/>}
+                       {item.addon && <img src={addonImg} alt="addon" width={17}/>}
+                       {item.lateRegister && <img src={lateImg} alt="late" width={17}/>}</td>
+                       <td className="tableCenter">{item.buyin} €</td>
+                       <td className="tableCenter">{item.maxPlayers}</td>
+                      
+                  </tr>
+                }
+                  </tbody>
+              ))
+              : 
+            
                 data.map(item => (
             
                     <tbody className='itemsGame'
                     onClick={() => getDetailGame(item.id)}
                     key = {item.id}>
+                      { item.start.seconds > today &&
                     <tr className={current && item.id === current[0].id ? 'selected' : ""}>
                          <td>{toDate(item.start.seconds)}</td>
                          <td>{toTime(item.start.seconds)}</td>
@@ -95,9 +124,11 @@ const Home = () => {
                          <td className="tableCenter">{item.buyin} €</td>
                          <td className="tableCenter">{item.maxPlayers}</td>
                     </tr>
+                      }
                     </tbody>
                 ))
             }
+          
             </table>
             </div>
         </div>

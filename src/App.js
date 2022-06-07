@@ -57,7 +57,7 @@ function App() {
           }
         />
         <Route
-          path="/profile"
+          path="/profile/:playerId"
           element={
             <RequireAuth>
               <Profile />

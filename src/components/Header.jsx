@@ -4,17 +4,30 @@ import { UserContext } from '../context/UserProvider';
 import { useForm } from "react-hook-form";
 import Dropd from './Dropdown';
 import logo from '../resources/pokerFamilylogo.PNG'
-import { SearchContext } from '../context/SearchProvider'
+import { FirestoreContext } from '../context/UseFirestore';
 
 const Header = () => {
     const { user } = useContext(UserContext)
-    const {searchCity} = useContext(SearchContext)
+    const {searchCity, setSearched, searched} = useContext(FirestoreContext)
 
     const { register, handleSubmit } = useForm();
 
+    const formatCity = city => {
+        if(city !== "") {
+            let words = city.split(" ").map(word =>{
+          return word[0].toUpperCase()+word.slice(1).toLowerCase()
+        })
+    
+     
+        return words.join(" ");
+    }
+      }
+
     const onSubmit = (data) => {
         console.log(data.city)
-        searchCity(data.city)
+        setSearched(data.city)
+        console.log(searched)
+        searchCity(formatCity(data.city))
     }
 
     return (

@@ -1,22 +1,42 @@
-import { useFirestore } from "../hooks/useFirestore";
-import { useEffect } from "react";
+import { FirestoreContext } from "../context/UseFirestore";
+import { useContext } from "react";
 import rebuyImg from '../resources/rebuy.png'
 import addonImg from '../resources/addon.png'
 import lateImg from '../resources/late.png'
 
 const MyGames = () => {
 
-    const {data, error, loading, getDataMyGame} =  useFirestore()
+    const {created, error, loading} =  useContext(FirestoreContext)
 
-    useEffect(() => {
-        console.log(data)
-        getDataMyGame()
-    }, [])
 
     if(loading) return <p>Loading data...</p>
     if(error) return <p>{error}</p>
 
-    if(data.length === 0) return <h2>No has creado ninguna partida</h2>
+    let today = Math.floor(new Date().getTime())/1000
+
+    console.log(today)
+
+    const toDate = second => {
+      let date = new Date(second*1000)
+      var day = date.getDate();
+      if(day < 10) day = "0"+day
+      var month = date.getMonth()+1;
+      if(month < 10) month = "0"+month
+      var year = date.getFullYear();
+      return `${day}/${month}/${year}`
+    }
+
+    const toTime = second => {
+      let time = new Date(second * 1000)
+      var hour = time.getHours()
+      if(hour < 10) hour = "0"+hour
+      var minute = time.getMinutes()
+      if(minute < 10) minute = "0"+minute
+      return `${hour}:${minute}`
+    }
+
+
+    if(created.length === 0) return <h2>No has creado ninguna partida</h2>
     return (
         <div>
         <h2>Partidas Creadas</h2>
@@ -35,7 +55,7 @@ const MyGames = () => {
                 </tr>
                 </thead>
             {
-                data.map(item => (
+                created.map(item => (
 
                     <tbody key = {item.id}>
                     <tr >

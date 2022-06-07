@@ -1,9 +1,11 @@
-import { useFirestore } from "../hooks/useFirestore"
+import { useContext } from "react"
+import { Link } from "react-router-dom"
+import { FirestoreContext } from "../context/UseFirestore"
 import { auth } from "../firebase/firebaseConfig"
 
 const CurrentGame = ({current, playersGame, getDetailGame, toDate, toTime}) => {
 
-    const {addPlayGame} =  useFirestore()
+    const {addPlayGame, deletePlayGame} =  useContext(FirestoreContext)
 
     if(!current){
         return null
@@ -19,6 +21,7 @@ const CurrentGame = ({current, playersGame, getDetailGame, toDate, toTime}) => {
             console.log(error)
         }
     }
+    
 
     const formatNumber = number => {
        return new Intl.NumberFormat('es-ES').format(parseInt(number))
@@ -76,8 +79,8 @@ const CurrentGame = ({current, playersGame, getDetailGame, toDate, toTime}) => {
                         key = {player.id}
                         >
                         <tr>
-                           <td> {player.displayName}</td>
-                            </tr>
+                        <Link to = {"/profile/" + player.uid} style={{ textDecoration: 'none'}}> <td>{player.displayName}</td></Link>
+                        </tr>
                     </tbody>))
                 }
             </table>

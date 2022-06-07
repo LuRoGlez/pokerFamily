@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useFirestore } from "../hooks/useFirestore";
+import { useContext } from "react";
+import { FirestoreContext } from "../context/UseFirestore";
 
 const CreateGame = () => {
   const navigate = useNavigate();
@@ -12,13 +13,21 @@ const CreateGame = () => {
   const watchLate = watch("lateRegister")
   const watchAddon = watch("addon")
 
- const {addGame} = useFirestore();
+ const {addGame} = useContext(FirestoreContext);
+
+ const formatCity = city => {
+   let words = city.split(" ").map(word =>{
+     return word[0].toUpperCase()+word.slice(1).toLowerCase()
+   })
+
+   return words.join(" ");
+ }
 
 
   const onSubmit = async(data) => {
       try {
           console.log(data)
-          await addGame(data.addon, data.addonChips, data.addonLevel, data.addonPrice, data.address, data.buyin, data.city, data.lateLevels, data.lateRegister, data.levels, data.maxPlayers, data.name, data.playersXtable, data.rebuy, data.stackInicial, data.start)
+          await addGame(data.addon, data.addonChips, data.addonLevel, data.addonPrice, data.address, data.buyin, formatCity(data.city), data.lateLevels, data.lateRegister, data.levels, data.maxPlayers, data.name, data.playersXtable, data.rebuy, data.stackInicial, data.start)
           navigate("/");
       } catch (error) {
           console.log(error.message)

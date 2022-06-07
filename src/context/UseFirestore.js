@@ -1,14 +1,20 @@
-import { collection, getDocs, addDoc, where, query } from "firebase/firestore"
-import { useState } from "react"
+import { collection, getDocs, addDoc, where, query, orderBy, deleteDoc } from "firebase/firestore"
+import { createContext, useState } from "react"
 import db, {auth} from "../firebase/firebaseConfig"
 
-export const useFirestore = () => {
+export const FirestoreContext = createContext();
+
+const UseFirestore = ({children}) => {
 
     const [data, setData] = useState([])
+    const [created, setCreated] = useState([])
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
     const [playersGame, setPlayersGame] = useState([])
     const [allPlayers, setAllPlayers] = useState([])
+    const [filtered, setFiltered] = useState(null)
+    const [searched, setSearched] = useState("")
+    const [comments, setComments] = useState([])
 
     //metodo ejemplo leer colección ---- crear states para cada colección
         //llevar el useEffect a cada componente y quitarlo de aqui para que no se ejecute frecuentemente
@@ -17,7 +23,9 @@ export const useFirestore = () => {
     const getDataGame = async() => {
         try {
             setLoading(true)
-            const querySnapshot = await getDocs(collection(db, "games"))
+            const dataRef = collection(db, "games")
+            const q = query(dataRef, orderBy("start"))
+            const querySnapshot = await getDocs(q)
             const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
             setData(dataDB)
         } catch (error) {
@@ -30,14 +38,34 @@ export const useFirestore = () => {
         }
     }
 
-    const getAllPlayers = async() => {
+    const getComments = async() => {
         try {
-            const querySnapshot = await getDocs(collection(db, "players"))
+            const dataRef = collection(db, "comments")
+            const q = query(dataRef, orderBy("date", "desc"))
+            const querySnapshot = await getDocs(q)
             const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
-            setAllPlayers(dataDB)
+            setComments(dataDB)
         } catch (error) {
             console.log(error)
             setError(error.message)
+        }
+    }
+    
+    const getDataMyGame = async() => {
+        try {
+            setLoading(true)
+            const dataRef = collection(db, "games")
+            const q = query(dataRef, where("uid", "==", auth.currentUser.uid))
+            const querySnapshot = await getDocs(q)
+            const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
+            setCreated(dataDB)
+        } catch (error) {
+            console.log(error)
+            setError(error.message)
+            
+        } finally {
+            setLoading(false)
+
         }
     }
 
@@ -55,23 +83,18 @@ export const useFirestore = () => {
         
     }
 
-    const getDataMyGame = async() => {
+
+    const getAllPlayers = async() => {
         try {
-            setLoading(true)
-            const dataRef = collection(db, "games")
-            const q = query(dataRef, where("uid", "==", auth.currentUser.uid))
-            const querySnapshot = await getDocs(q)
+            const querySnapshot = await getDocs(collection(db, "players"))
             const dataDB = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
-            setData(dataDB)
+            setAllPlayers(dataDB)
         } catch (error) {
             console.log(error)
             setError(error.message)
-            
-        } finally {
-            setLoading(false)
-
         }
     }
+
 
     const addPlayGame = async(gameId) => {
         try {
@@ -81,6 +104,21 @@ export const useFirestore = () => {
                 displayName: auth.currentUser.displayName
             }
             )} catch (error) {
+            console.log(error)
+            setError(error.message)
+        }
+    }
+
+    const addComment = async(userA, date, comment) => {
+        try {
+            await addDoc(collection(db, "comments"), {
+                userA,
+                date,
+                comment,
+                userB: auth.currentUser.displayName
+            })
+            
+        } catch (error) {
             console.log(error)
             setError(error.message)
         }
@@ -209,14 +247,16 @@ export const useFirestore = () => {
     }
 
     const searchCity = city => {
-        getDataGame()
-        console.log(data)
-        const dataCity = data.filter(item => item.city === city)
-        setData(dataCity)
-        console.log(data)
+        console.log( data)
+        setFiltered(data.filter(item => item.city === city))
     }
 
-    return {
-        data, error, loading, setData, getDataGame, addGame, getDataMyGame, addPlayGame, playersGame, getPlayersGame, getAllPlayers, allPlayers, searchCity
-    }
+    return (
+        <FirestoreContext.Provider value = {{data, error, loading, setData, getDataGame, addGame, getDataMyGame, addPlayGame, playersGame, getPlayersGame, getAllPlayers, allPlayers, searchCity, filtered, searched, setSearched, created, addComment, comments, getComments}}>
+         {children}
+        </FirestoreContext.Provider>
+    )
+        
+    
 }
+export default UseFirestore;
