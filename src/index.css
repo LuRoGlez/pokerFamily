@@ -72,8 +72,8 @@
     margin-right: 5%;
     height:30rem;
     overflow-y:scroll;
-    border-top-left-radius: 1em;
-     border-bottom-left-radius: 1rem;
+    overflow: hidden
+    
 }
 
 th {
@@ -95,17 +95,14 @@ th {
 }
 
 tr {
-    
     font-weight: 500;
 }
 
 table{
         font-size: 14px;
         border-collapse: collapse;
-        border-top-left-radius: 1em;
-        border-bottom-left-radius: 1rem;
-        overflow: hidden;
-      
+        border-radius: 0.3rem;
+        overflow: hidden;      
   }
 
 .nombreTable{
@@ -173,11 +170,6 @@ h4{
     width: 95%;
     padding: 0.5rem;
     border-radius: 0.5rem;
-}
-
-
-span{
-    font-weight: bold;
 }
 
 .center{
@@ -300,3 +292,6 @@ tbody:nth-child(even) {
     align-items: center;
 }
 
+h6 {
+    display:  inline;
+}

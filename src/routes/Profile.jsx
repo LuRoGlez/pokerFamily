@@ -2,28 +2,24 @@ import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FirestoreContext } from "../context/UseFirestore";
 import {auth} from "../firebase/firebaseConfig"
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 
 const Profile = () => {
 
     const params = useParams()
 
-    const {data, allPlayers, playersGame, addComment, comments, getComments} = useContext(FirestoreContext)
+    const {data, allPlayers, playersGame, addComment, comments, getComments, getAllPlayersGame, allPlayersGame} = useContext(FirestoreContext)
     const {register, handleSubmit, formState: { errors }, reset} = useForm(); 
 
     useEffect(() => {
+        getAllPlayersGame()
         getComments()
     }, [])
 
-    console.log(comments)
    const player = allPlayers.filter(player => player.uid === params.playerId)
-
-   const gamesPlayed = playersGame.filter(playGame => playGame.uid === params.playerId).length
+   const gamesPlayed = allPlayersGame.filter(playGame => playGame.uid === params.playerId).length
    const gamesCreated = data.filter(game => game.uid === params.playerId).length
-
-   console.log("AAAAAAAAAAAAAAAAAAAA" +  auth.currentUser.uid)
-
    const myComments = comments.filter(comment => comment.userA === params.playerId)
 
    let today = Math.floor(new Date().getTime())/1000
@@ -38,7 +34,6 @@ const Profile = () => {
         var month = date.getMonth()+1;
         if(month < 10) month = "0"+month
         var year = date.getFullYear();
-        console.log(year)
         return `${day}/${month}/${year}`
       }
 
@@ -54,7 +49,6 @@ const Profile = () => {
 
    const currentPlayer = player[0]
 
-   console.log(currentPlayer)
     return (
         <>
         <div className="allProfile">
@@ -63,10 +57,10 @@ const Profile = () => {
                 <h1>{currentPlayer.userName}</h1>
                 <div className="infoProfile">
                     <div className="gamesCreated">
-                        <p><span>Partidas Creadas:</span> {gamesCreated} </p>
+                        <p><h6>Partidas Creadas:</h6> {gamesCreated} </p>
                     </div>
                     <div className="gamesPlayed">
-                        <p><span>Partidas Jugadas:</span> {gamesPlayed}</p>
+                        <p><h6>Partidas Jugadas:</h6> {gamesPlayed}</p>
                     </div>
 
                 </div>
@@ -87,19 +81,23 @@ const Profile = () => {
             </div>
             }
         </div>
+        { myComments.length > 0 ?
         <div className="comments">
             <h3>Comentarios</h3>
-            { myComments.map(item => (<div className="commentContent my-2">
+            { myComments.map(item => (
+            
+            <div className="commentContent my-2">
                 <div className="dateNameComment">
-                    <span>{item.userB}</span>
-                    <p>{toDate(item.date.seconds)}</p>
+                    <h6>{item.userB}</h6>
+                    <h6>{toDate(item.date.seconds)}</h6>
                 </div>
                 <div className="comment">
                    "{item.comment}"
                 </div>
             </div>))}
             
-        </div>
+        </div> : <h5>No hay comentarios sobre este jugador</h5>
+     } 
         </div>
         </>
      );
