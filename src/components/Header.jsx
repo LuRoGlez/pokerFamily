@@ -24,9 +24,7 @@ const Header = () => {
       }
 
     const onSubmit = (data) => {
-        console.log(data.city)
         setSearched(data.city)
-        console.log(searched)
         searchCity(formatCity(data.city))
     }
 

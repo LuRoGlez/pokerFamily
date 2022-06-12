@@ -5,6 +5,7 @@ import addonImg from "../resources/addon.png";
 import lateImg from "../resources/late.png";
 import { auth } from "../firebase/firebaseConfig";
 import { Link } from "react-router-dom"
+import Swal from "sweetalert2";
 
 
 const MyGames = () => {
@@ -60,6 +61,11 @@ const MyGames = () => {
 
  const removeGame = async (gameId) => {
      await deleteGame(gameId)
+     Swal.fire(
+      'Partida Eliminada',
+      '',
+      'warning'
+    )
  }
 
   if (created.length === 0) return <h2 className="my-5">No has creado ninguna partida</h2>;
@@ -125,25 +131,25 @@ const MyGames = () => {
         <div className="containerDetalles">
             <h4>{current[0].name}</h4>
             <ul>
-            <li><h6>Fecha: </h6>{toDate(current[0].start.seconds)}</li>
-            <li><h6>Hora: </h6>{toTime(current[0].start.seconds)} h</li>
-            <li><h6>Ciudad: </h6>{current[0].city}</li>
-            <li><h6>Buy In: </h6>{current[0].buyin} €</li>
-            <li><h6>Stack Inicial: </h6>{formatNumber(current[0].stackInicial)}</li>
-            <li><h6>Niveles: </h6>{current[0].levels} minutos</li>
-            <li><h6>Nº de jugadores: </h6>{numRegistered(current[0].id)}/{current[0].maxPlayers}</li>
-            <li><h6>Tamaño de mesa: </h6>{current[0].playersXtable} jugadores</li>
+            <li><span>Fecha: </span>{toDate(current[0].start.seconds)}</li>
+            <li><span>Hora: </span>{toTime(current[0].start.seconds)} h</li>
+            <li><span>Ciudad: </span>{current[0].city}</li>
+            <li><span>Buy In: </span>{current[0].buyin} €</li>
+            <li><span>Stack Inicial: </span>{formatNumber(current[0].stackInicial)}</li>
+            <li><span>Niveles: </span>{current[0].levels} minutos</li>
+            <li><span>Nº de jugadores: </span>{numRegistered(current[0].id)}/{current[0].maxPlayers}</li>
+            <li><span>Tamaño de mesa: </span>{current[0].playersXtable} jugadores</li>
             {current[0].lateRegister ?
             
-                <li><h6>Niveles de Tardío: </h6>{current[0].lateLevels}</li> :
-                <li><h6>Sin Registro Tardío</h6></li>
+                <li><span>Niveles de Tardío: </span>{current[0].lateLevels}</li> :
+                <li><span>Sin Registro Tardío</span></li>
             
             }
             {current[0].addon && 
             <>
-                <li><h6>Precio Addon: </h6>{current[0].addonPrice} €</li>
-                <li><h6>Puntos Addon: </h6>{formatNumber(current[0].addonChips)}</li>
-                <li><h6>Nivel Addon: </h6>{current[0].addonLevel}</li>
+                <li><span>Precio Addon: </span>{current[0].addonPrice} €</li>
+                <li><span>Puntos Addon: </span>{formatNumber(current[0].addonChips)}</li>
+                <li><span>Nivel Addon: </span>{current[0].addonLevel}</li>
             </>
             }
             </ul>
@@ -162,7 +168,7 @@ const MyGames = () => {
                         key = {player.id}
                         >
                         <tr>
-                        <Link to = {"/profile/" + player.uid} style={{ textDecoration: 'none'}}> <td>{player.displayName}</td></Link>
+                        <td><Link to = {"/profile/" + player.uid} style={{ color: 'inherit', textDecoration: 'inherit'}}> {player.displayName}</Link></td>
                         </tr>
                     </tbody>))
                 }

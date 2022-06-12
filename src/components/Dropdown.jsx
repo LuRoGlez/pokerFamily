@@ -2,6 +2,7 @@ import  { Dropdown, DropdownItem, DropdownMenu, DropdownToggle}  from 'reactstra
 import {UserContext} from '../context/UserProvider'
 import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const Dropd = () => {
 
@@ -17,7 +18,11 @@ const Dropd = () => {
         try {
             await logOutUser()
         } catch (error) {
-            console.log(error.code)
+            Swal.fire(
+                error.code,
+                '',
+                'error'
+              )
         }
     }
 

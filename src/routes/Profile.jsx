@@ -3,24 +3,35 @@ import { useParams } from "react-router-dom";
 import { FirestoreContext } from "../context/UseFirestore";
 import {auth} from "../firebase/firebaseConfig"
 import { useForm } from "react-hook-form";
+import editcomment from "../resources/editcomment.png";
+import deletecomment from "../resources/deletecomment.png";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+
 
 
 const Profile = () => {
 
-    const params = useParams()
+    const {playerId} = useParams()
 
-    const {data, allPlayers, playersGame, addComment, comments, getComments, getAllPlayersGame, allPlayersGame} = useContext(FirestoreContext)
-    const {register, handleSubmit, formState: { errors }, reset} = useForm(); 
+    const {data, allPlayers, addComment, comments, getComments, getAllPlayersGame, allPlayersGame, deleteComment} = useContext(FirestoreContext)
+    const {register, handleSubmit, reset} = useForm(); 
 
     useEffect(() => {
         getAllPlayersGame()
         getComments()
+
+        if(playerId !== undefined) {
+            getComments()
+            getAllPlayersGame()
+        }
     }, [])
 
-   const player = allPlayers.filter(player => player.uid === params.playerId)
-   const gamesPlayed = allPlayersGame.filter(playGame => playGame.uid === params.playerId).length
-   const gamesCreated = data.filter(game => game.uid === params.playerId).length
-   const myComments = comments.filter(comment => comment.userA === params.playerId)
+
+   const player = allPlayers.filter(player => player.uid === playerId)
+   const gamesPlayed = allPlayersGame.filter(playGame => playGame.uid === playerId).length
+   const gamesCreated = data.filter(game => game.uid === playerId).length
+   const myComments = comments.filter(comment => comment.userA === playerId)
 
    let today = Math.floor(new Date().getTime())/1000
 
@@ -43,11 +54,24 @@ const Profile = () => {
            reset({message : ""})
            getComments()
        } catch (error) {
-           console.log(error.message)
+        Swal.fire(
+            error.message,
+            '',
+            'error'
+          )
        }
    }
 
    const currentPlayer = player[0]
+
+   const removeComment = async (comment) => {
+    await deleteComment(comment)
+    Swal.fire(
+        "Comentario Eliminado",
+        '',
+        'warning'
+      )
+}
 
     return (
         <>
@@ -57,22 +81,22 @@ const Profile = () => {
                 <h1>{currentPlayer.userName}</h1>
                 <div className="infoProfile">
                     <div className="gamesCreated">
-                        <p><h6>Partidas Creadas:</h6> {gamesCreated} </p>
+                        <p><span>Partidas Creadas:</span> {gamesCreated} </p>
                     </div>
                     <div className="gamesPlayed">
-                        <p><h6>Partidas Jugadas:</h6> {gamesPlayed}</p>
+                        <p><span>Partidas Jugadas:</span> {gamesPlayed}</p>
                     </div>
 
                 </div>
             </div>
-            { params.playerId === auth.currentUser.uid ? null :
+            { playerId === auth.currentUser.uid ? null :
             <div className="createComment">
                 <form className="formComments"
                 onSubmit={handleSubmit(onSubmit)}
                 >
                     <h5>¿Has jugado con {currentPlayer.userName}? </h5>
-                    <h6>Deja un comentario para que todos lo conozcan</h6>
-                    <textarea cols="50" rows="5" maxlength="500" placeholder="Ej: Muy simpatico y gran jugador de poker"
+                    <span>Deja un comentario para que todos lo conozcan</span>
+                    <textarea cols="50" rows="5" maxLength="500" placeholder="Ej: Muy simpatico y gran jugador de poker"
                     {...register("message", {required: "Campo obligatorio"})}
                     />
                     <button type="submit"
@@ -85,14 +109,22 @@ const Profile = () => {
         <div className="comments">
             <h3>Comentarios</h3>
             { myComments.map(item => (
-            
-            <div className="commentContent my-2">
+                
+            <div className="commentContent my-2"
+            key={item.id}>
                 <div className="dateNameComment">
-                    <h6>{item.userB}</h6>
-                    <h6>{toDate(item.date.seconds)}</h6>
+                    <span>{item.userB}</span>
+                    <span>{toDate(item.date.seconds)}</span>
                 </div>
                 <div className="comment">
                    "{item.comment}"
+                   {item.userB === auth.currentUser.displayName &&
+                   <div><Link to = {"/editComment/" + item.id} ><img className="mx-2 icon" src={editcomment} alt="Rebuy" width={17} /></Link>
+                        
+                        <img className="icon" src={deletecomment} alt="Rebuy" width={17} 
+                        onClick={() => removeComment(item.id)}/>
+                   </div>
+                }
                 </div>
             </div>))}
             

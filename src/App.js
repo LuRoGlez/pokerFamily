@@ -12,6 +12,8 @@ import GamesPlayed from "./routes/GamesPlayed";
 import MyGames from "./routes/MyGames";
 import NotFound from "./routes/NotFound";
 import Profile from "./routes/Profile";
+import EditComment from "./routes/EditComment";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   const { user } = useContext(UserContext);
@@ -23,6 +25,7 @@ function App() {
   return (
     <Router>
       <Header />
+      <ErrorBoundary>
       <Routes>
         <Route
           path="/"
@@ -64,10 +67,19 @@ function App() {
             </RequireAuth>
           }
         />
+         <Route
+          path="/editComment/:commentId"
+          element={
+            <RequireAuth>
+              <EditComment />
+            </RequireAuth>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </ErrorBoundary>
     </Router>
   );
 }

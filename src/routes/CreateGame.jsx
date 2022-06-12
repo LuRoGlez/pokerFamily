@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useContext } from "react";
 import { FirestoreContext } from "../context/UseFirestore";
+import Swal from "sweetalert2";
 
 const CreateGame = () => {
   const navigate = useNavigate();
@@ -28,6 +29,11 @@ const CreateGame = () => {
       try {
           console.log(data)
           await addGame(data.addon, data.addonChips, data.addonLevel, data.addonPrice, data.address, data.buyin, formatCity(data.city), data.lateLevels, data.lateRegister, data.levels, data.maxPlayers, data.name, data.playersXtable, data.rebuy, data.stackInicial, data.start)
+          Swal.fire(
+            data.name,
+            '¡Partida creada con éxito!',
+            'success'
+          )
           navigate("/");
       } catch (error) {
           console.log(error.message)

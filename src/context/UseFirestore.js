@@ -1,4 +1,4 @@
-import { collection, getDocs, addDoc, where, query, orderBy, deleteDoc, doc } from "firebase/firestore"
+import { collection, getDocs, addDoc, where, query, orderBy, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import { createContext, useState } from "react"
 import db, {auth} from "../firebase/firebaseConfig"
 
@@ -90,7 +90,18 @@ const UseFirestore = ({children}) => {
 
         } catch (error) {
             setError(error.message)
-        }    }
+        }    
+    }
+
+    const deleteComment = async(id) => {
+        try {
+            const docRef = doc(db, "comments", id)
+            await deleteDoc(docRef)
+            setComments(comments.filter(item => item.id !== id))
+        } catch (error) {
+            setError(error.message)
+        }
+    }
 
     const deleteGame = async (id) => {
         try {
@@ -259,12 +270,21 @@ const UseFirestore = ({children}) => {
         }
     }
 
+    const updateComment = async(id, newComment) => {
+        try {
+            const docRef = doc(db, "comments", id);
+            await updateDoc(docRef, {comment: newComment})
+        } catch (error) {
+            setError(error.message)
+        }
+    }
+
     const searchCity = city => {
         setFiltered(data.filter(item => item.city === city))
     }
 
     return (
-        <FirestoreContext.Provider value = {{data, error, loading, setData, getDataGame, addGame, addPlayGame, playersGame, getPlayersGame, getAllPlayers, allPlayers, searchCity, filtered, searched, setSearched, addComment, comments, getComments, deletePlayGame, getAllPlayersGame, allPlayersGame, deleteGame}}>
+        <FirestoreContext.Provider value = {{data, error, loading, setData, getDataGame, addGame, addPlayGame, playersGame, getPlayersGame, getAllPlayers, allPlayers, searchCity, filtered, searched, setSearched, addComment, comments, getComments, deletePlayGame, getAllPlayersGame, allPlayersGame, deleteGame, deleteComment, updateComment}}>
          {children}
         </FirestoreContext.Provider>
     )
