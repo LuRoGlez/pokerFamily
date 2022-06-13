@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { addDoc, collection } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 import db, { auth } from "../firebase/firebaseConfig";
+import Swal from "sweetalert2";
 
 export const UserContext = createContext();
 
@@ -15,7 +16,6 @@ useEffect(() => {
         if(user){
             const { email, photoURL, displayName, uid } = user
             setUser({email, photoURL, displayName, uid})
-            console.log(user)
         } else {
             setUser(null)
         }
@@ -32,7 +32,11 @@ const addPlayer = async (userName, email) => {
             uid: auth.currentUser.uid
         })
     } catch (error) {
-        console.log(error.message)
+        Swal.fire(
+            error.message,
+            '',
+            'error'
+          )
     }
 }
 

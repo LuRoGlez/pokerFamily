@@ -7,6 +7,7 @@ import rebuyImg from "../resources/rebuy.png";
 import addonImg from "../resources/addon.png";
 import lateImg from "../resources/late.png";
 import { auth } from "../firebase/firebaseConfig";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const {
@@ -41,8 +42,12 @@ const Home = () => {
       getPlayersGame(gameId);
       
     } catch (error) {
-      console.log(error)
-    }
+      Swal.fire(
+        error.message,
+        '',
+        'error'
+      )   
+     }
   };
 
   let today = Math.floor(new Date().getTime()) / 1000;

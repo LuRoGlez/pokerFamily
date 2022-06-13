@@ -193,6 +193,7 @@ h4{
     width: 28%;
     background-color: white;
     overflow-y:scroll;
+    overflow: hidden;
     border-radius: 0.5rem;
 }
 

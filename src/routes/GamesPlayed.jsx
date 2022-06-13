@@ -19,7 +19,6 @@ const GamesPlayed = () => {
     }, []);
 
     const myPlayerGame = allPlayersGame.filter((item) => item.uid === auth.currentUser.uid)
-    console.log(myPlayerGame)
 
     let today = Math.floor(new Date().getTime()) / 1000;
 
@@ -29,7 +28,11 @@ const GamesPlayed = () => {
           getPlayersGame(gameId);
         
         } catch (error) {
-          
+          Swal.fire(
+            error.message,
+            '',
+            'error'
+          )
         }
       };
 
@@ -46,8 +49,6 @@ const GamesPlayed = () => {
             }
         }
     }
-
-    console.log(gamesPlayed)
 
     const toDate = (second) => {
         let date = new Date(second * 1000);

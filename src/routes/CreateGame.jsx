@@ -27,7 +27,6 @@ const CreateGame = () => {
 
   const onSubmit = async(data) => {
       try {
-          console.log(data)
           await addGame(data.addon, data.addonChips, data.addonLevel, data.addonPrice, data.address, data.buyin, formatCity(data.city), data.lateLevels, data.lateRegister, data.levels, data.maxPlayers, data.name, data.playersXtable, data.rebuy, data.stackInicial, data.start)
           Swal.fire(
             data.name,
@@ -36,7 +35,11 @@ const CreateGame = () => {
           )
           navigate("/");
       } catch (error) {
-          console.log(error.message)
+        Swal.fire(
+          error.message,
+          '',
+          'error'
+        )
       }
   }
 
@@ -64,7 +67,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 25"
-              {...register("buyin", { required: "Campo obligatorio" })}
+              {...register("buyin", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.buyin && (
               <p style={{ color: "red" }}>{errors.buyin.message}</p>
@@ -76,7 +79,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 18"
-              {...register("maxPlayers", { required: "Campo obligatorio" })}
+              {...register("maxPlayers", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.maxPlayers && (
               <p style={{ color: "red" }}>{errors.maxPlayers.message}</p>
@@ -88,7 +91,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 6"
-              {...register("playersXtable", { required: "Campo obligatorio" })}
+              {...register("playersXtable", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.playersXtable && (
               <p style={{ color: "red" }}>{errors.playersXtable.message}</p>
@@ -102,7 +105,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 25"
-              {...register("levels", { required: "Campo obligatorio" })}
+              {...register("levels", { required: "Campo obligatorio" , min: 1})}
             />
             {errors.levels && (
               <p style={{ color: "red" }}>{errors.levels.message}</p>
@@ -114,7 +117,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 40.000"
-              {...register("stackInicial", { required: "Campo obligatorio" })}
+              {...register("stackInicial", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.stackInicial && (
               <p style={{ color: "red" }}>{errors.stackInicial.message}</p>
@@ -164,7 +167,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 10"
-              {...register("addonPrice", { required: "Campo obligatorio" })}
+              {...register("addonPrice", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.addonPrice && (
               <p style={{ color: "red" }}>{errors.addonPrice.message}</p>
@@ -176,7 +179,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 25.000"
-              {...register("addonChips", { required: "Campo obligatorio" })}
+              {...register("addonChips", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.addonChips && (
               <p style={{ color: "red" }}>{errors.addonChips.message}</p>
@@ -188,7 +191,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 6"
-              {...register("addonLevel", { required: "Campo obligatorio" })}
+              {...register("addonLevel", { required: "Campo obligatorio", min: 1 })}
             />
             {errors.addonLevel && (
               <p style={{ color: "red" }}>{errors.addonLevel.message}</p>
@@ -205,7 +208,7 @@ const CreateGame = () => {
               type="number"
               className="form-control short"
               placeholder="Ej: 6"
-              {...register("lateLevels", { required: "Campo obligatorio" })}
+              {...register("lateLevels", { required: "Campo obligatorio" , min: 1})}
             />
             {errors.lateLevels && (
               <p style={{ color: "red" }}>{errors.lateLevels.message}</p>
